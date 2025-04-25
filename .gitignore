@@ -1,0 +1,84 @@
+# Dependências
+node_modules/
+/.pnp
+.pnp.js
+venv/
+env/
+.env
+.venv
+ENV/
+
+# Arquivos de build/produção
+/build/
+/dist/
+/out/
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Arquivos de ambiente
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*
+
+# IDEs e editores
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/
+*.swp
+*.swo
+*~
+
+# Sistema
+.DS_Store
+Thumbs.db
+.thumb
+._*
+.Spotlight-V100
+.Trashes
+
+# Testing
+/coverage
+.coverage
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+
+# Next.js
+.next/
+out/
+
+# React
