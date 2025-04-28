@@ -80,16 +80,31 @@ h1 {
     border-bottom: none;
 }
 
-/* Destacar não conformidades com ícone de alerta */
-.card-body ul:first-of-type li::before {
+/* Estilizar não conformidades em vermelho com fundo leve */
+.non-conformity li {
+    color: #dc3545; /* Vermelho */
+    background-color: #f8d7da; /* Fundo vermelho claro */
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+.non-conformity li::before {
     content: "\f06a"; /* Bootstrap Icons: bi-exclamation-circle */
     font-family: 'Bootstrap Icons';
     color: #dc3545; /* Vermelho */
     margin-right: 8px;
 }
 
-/* Destacar conformidades com ícone de check */
-.card-body ul:last-of-type li::before {
+/* Estilizar conformidades em verde */
+.conformity li {
+    color: #28a745; /* Verde */
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+.conformity li::before {
     content: "\f058"; /* Bootstrap Icons: bi-check-circle */
     font-family: 'Bootstrap Icons';
     color: #28a745; /* Verde */

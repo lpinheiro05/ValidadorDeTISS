@@ -3,7 +3,7 @@ import os
 from flask import Flask, request, render_template, jsonify
 from scripts.agente_ocr import (
     extrair_regras,
-    extrair_texto_imagem,
+    analisar_imagem,
     resumir_texto,
     analisar_preenchimento,
 )
@@ -20,6 +20,10 @@ if not os.path.exists(UPLOAD_FOLDER):
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 print("Pasta de uploads configurada.")
 
+# Caminho do PDF estático
+PDF_REGRAS_PATH = os.path.join("static", "regras.pdf")
+print(f"PDF estático configurado: {PDF_REGRAS_PATH}")
+
 
 @app.route("/")
 def index():
@@ -31,48 +35,36 @@ def index():
 def processar():
     print("Acessando a rota /processar")
     try:
-        if "pdf" not in request.files or "imagem" not in request.files:
-            print("Erro: Arquivos PDF ou imagem não enviados")
-            return jsonify(
-                {"error": "Por favor, envie ambos os arquivos (PDF e imagem)."}
-            ), 400
+        if "imagem" not in request.files:
+            print("Erro: Arquivo de imagem não enviado")
+            return jsonify({"error": "Por favor, envie o arquivo de imagem."}), 400
 
-        pdf_file = request.files["pdf"]
         imagem_file = request.files["imagem"]
-        print(
-            f"Arquivos recebidos: PDF={pdf_file.filename}, Imagem={imagem_file.filename}"
-        )
+        print(f"Arquivo recebido: Imagem={imagem_file.filename}")
 
-        pdf_path = os.path.join(app.config["UPLOAD_FOLDER"], pdf_file.filename)
         imagem_path = os.path.join(app.config["UPLOAD_FOLDER"], imagem_file.filename)
-        print(f"Salvando arquivos: PDF={pdf_path}, Imagem={imagem_path}")
-        pdf_file.save(pdf_path)
+        print(f"Salvando arquivo: Imagem={imagem_path}")
         imagem_file.save(imagem_path)
 
-        print("Extraindo regras do PDF...")
-        regras = extrair_regras(pdf_path)
+        print("Extraindo regras do PDF estático...")
+        regras = extrair_regras(PDF_REGRAS_PATH)
         print(f"Regras extraídas: {regras[:100] if regras else 'Vazio'}...")
 
-        print("Extraindo texto da imagem...")
-        texto_documento = extrair_texto_imagem(imagem_path)
+        print("Analisando imagem...")
+        texto_documento_resumido = analisar_imagem(imagem_path)
         print(
-            f"Texto da imagem extraído: {texto_documento[:100] if texto_documento else 'Vazio'}..."
+            f"Texto da imagem resumido: {texto_documento_resumido[:100] if texto_documento_resumido else 'Vazio'}..."
         )
 
         print("Resumindo regras...")
         regras_resumidas = resumir_texto(regras)
         print(f"Regras resumidas: {regras_resumidas}")
 
-        print("Resumindo texto da imagem...")
-        texto_documento_resumido = resumir_texto(texto_documento)
-        print(f"Texto da imagem resumido: {texto_documento_resumido}")
-
         print("Analisando preenchimento...")
         resultado = analisar_preenchimento(regras_resumidas, texto_documento_resumido)
         print(f"Resultado da análise: {resultado}")
 
-        print("Removendo arquivos temporários...")
-        os.remove(pdf_path)
+        print("Removendo arquivo temporário...")
         os.remove(imagem_path)
 
         print("Enviando resposta ao frontend...")
@@ -85,4 +77,4 @@ def processar():
 
 if __name__ == "__main__":
     print("Iniciando o servidor Flask...")
-    app.run(debug=True, port=5002)
+    app.run(debug=True, host="0.0.0.0", port=5002)
